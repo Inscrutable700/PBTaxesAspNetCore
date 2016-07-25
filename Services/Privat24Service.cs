@@ -30,7 +30,7 @@ namespace TaxesPrivatBank.Business.Services
         /// </summary>
         /// <param name="date">The date.</param>
         /// <returns></returns>
-        public async Task<ExchangeRateDto> GetExchangeRate(string currency, DateTime date)
+        public ExchangeRateDto GetExchangeRate(string currency, DateTime date)
         {
             string apiEndPoint = "p24api/exchange_rates";
             Dictionary<string, string> parameters = new Dictionary<string, string>
@@ -39,7 +39,7 @@ namespace TaxesPrivatBank.Business.Services
                 { "json", null }
             };
 
-            var exchangeRate = await this.GetGETResponse<ExchangeRatesDto>(apiEndPoint, parameters);
+            var exchangeRate = this.GetGETResponse<ExchangeRatesDto>(apiEndPoint, parameters);
 
             return exchangeRate.ExchangeRates
                 .SingleOrDefault(er => er.Currency.Equals(currency, StringComparison.OrdinalIgnoreCase));

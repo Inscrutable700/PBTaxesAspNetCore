@@ -27,11 +27,8 @@ namespace PBTaxesAspNetCore.Controllers
             TaxesViewModel model = new TaxesViewModel();
 
             string sessionID = CookieHelper.PBSessionID;
-            var taxesTask = this.privatBankManager
+            var taxes = this.privatBankManager
                 .GetTaxes(sessionID, DateTime.Parse("04.01.2016"), DateTime.Parse("06.30.2016"), 5);
-
-            taxesTask.Wait();
-            TaxesDto taxes = taxesTask.Result;
 
             // model.FullAmount = taxes.FullAmount;
             // model.StartDate = taxes.StartDate;

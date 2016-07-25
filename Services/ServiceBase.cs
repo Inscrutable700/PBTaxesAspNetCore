@@ -32,15 +32,15 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="apiEndpoint">The API endpoint.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        protected async Task<T> GetPOSTResponse<T>(string apiEndpoint, Dictionary<string, string> parameters)
+        protected T GetPOSTResponse<T>(string apiEndpoint, Dictionary<string, string> parameters)
             where T : new()
         {
             var client = new FlurlClient($"{this.serviceUrl}{apiEndpoint}");
-            client.WithHeader("Content-Type", "application/json");
             client.WithHeader("Accept", "application/json");
-            var response = await client
+            var response = client
                 .PostJsonAsync(parameters).ReceiveJson<T>();
-            return response;
+            response.Wait();
+            return response.Result;
             // RestClient client = new RestClient(new Uri(this.serviceUrl));
             // RestRequest request = new RestRequest(apiEndpoint, Method.POST);
             // request.RequestFormat = DataFormat.Json;
@@ -64,12 +64,12 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="parameters">The parameters.</param>
         /// <param name="authorizationHeader">The authorization header.</param>
         /// <returns></returns>
-        protected async Task<T> GetGETResponse<T>(string apiEndpoint, Dictionary<string, string> parameters, string authorizationHeader = null)
+        protected T GetGETResponse<T>(string apiEndpoint, Dictionary<string, string> parameters, string authorizationHeader = null)
             where T : new()
         {
             var url = new Flurl.Url($"{this.serviceUrl}{apiEndpoint}").SetQueryParams(parameters);
             var client = new FlurlClient(url);
-            client.WithHeader("Content-Type", "application/json");
+            // client.WithHeader("Content-Type", "application/json");
             client.WithHeader("Accept", "application/json");
 
             if(!string.IsNullOrEmpty(authorizationHeader))
@@ -77,7 +77,9 @@ namespace TaxesPrivatBank.Business.Services
                 client.WithHeader("Authorization", authorizationHeader);
             }
 
-            return await client.GetAsync().ReceiveJson<T>();
+            var task = client.GetAsync().ReceiveJson<T>();
+            task.Wait();
+            return task.Result;
 
             // RestClient client = new RestClient(new Uri(this.serviceUrl));
             // RestRequest request = new RestRequest(apiEndpoint, Method.GET);

@@ -44,7 +44,7 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="clientID">The client identifier.</param>
         /// <param name="clientSecret">The client secret.</param>
         /// <returns>The session.</returns>
-        public async Task<PBSessionDto> GetSession()
+        public PBSessionDto GetSession()
         {
             string apiEndpoint = "api/auth/createSession";
             Dictionary<string, string> parameters = new Dictionary<string, string>()
@@ -53,7 +53,7 @@ namespace TaxesPrivatBank.Business.Services
                 { "clientSecret", this.clientSecret},
             };
 
-            return await this.GetPOSTResponse<PBSessionDto>(apiEndpoint, parameters);
+            return this.GetPOSTResponse<PBSessionDto>(apiEndpoint, parameters);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="login">The login.</param>
         /// <param name="password">The password.</param>
         /// <returns>The person session.</returns>
-        public async Task<PBPersonSessionDto> GetPersonSession(string sessionId, string login, string password)
+        public PBPersonSessionDto GetPersonSession(string sessionId, string login, string password)
         {
             string apiEndpoint = "api/p24BusinessAuth/createSession";
             Dictionary<string, string> parameters = new Dictionary<string, string>()
@@ -73,7 +73,7 @@ namespace TaxesPrivatBank.Business.Services
                 { "password", password }
             };
 
-            return await this.GetPOSTResponse<PBPersonSessionDto>(apiEndpoint, parameters);
+            return this.GetPOSTResponse<PBPersonSessionDto>(apiEndpoint, parameters);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="sessionId">The session identifier.</param>
         /// <param name="code">The code.</param>
         /// <returns>The person session.</returns>
-        public async Task<PBPersonSessionDto> ConfirmSmsCode(string sessionId, string code)
+        public PBPersonSessionDto ConfirmSmsCode(string sessionId, string code)
         {
             string apiEndpoint = "api/p24BusinessAuth/checkOtp";
             Dictionary<string, string> parameters = new Dictionary<string, string>()
@@ -91,7 +91,7 @@ namespace TaxesPrivatBank.Business.Services
                 { "otp", code},
             };
 
-            return await this.GetPOSTResponse<PBPersonSessionDto>(apiEndpoint, parameters);
+            return this.GetPOSTResponse<PBPersonSessionDto>(apiEndpoint, parameters);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="endDate">The end date.</param>
         /// <param name="cardNumber">The card number.</param>
         /// <returns></returns>
-        public async Task<List<PBStatementItemDto>> GetStatements(string sessionID, DateTime startDate, DateTime endDate)
+        public List<PBStatementItemDto> GetStatements(string sessionID, DateTime startDate, DateTime endDate)
         {
             string apiEndPoint = "api/p24b/statements";
             Dictionary<string, string> parameters = new Dictionary<string, string>
@@ -112,7 +112,7 @@ namespace TaxesPrivatBank.Business.Services
                 { "showInf", null }
             };
 
-            return await this.GetGETResponse<List<PBStatementItemDto>>(apiEndPoint, parameters, $"Token {sessionID}");
+            return this.GetGETResponse<List<PBStatementItemDto>>(apiEndPoint, parameters, $"Token {sessionID}");
         }
     }
 }
