@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using PBTaxesAspNetCore.Helpers;
 using PBTaxesAspNetCore.Interfaces;
 using PBTaxesAspNetCore.Managers;
+using PBTaxesAspNetCore.Models;
 using System.Threading.Tasks;
 using PBTaxesAspNetCore.Dto;
+using Microsoft.Extensions.Options;
 
 namespace PBTaxesAspNetCore.Controllers
 {
@@ -14,7 +16,10 @@ namespace PBTaxesAspNetCore.Controllers
     {
         private IPrivatBankManager privatBankManager;
 
-        public TaxesController(){
+        private PrivatBankConfig privatBankConfig;
+
+        public TaxesController(IOptions<PrivatBankConfig> pbConfig){
+            this.privatBankConfig = pbConfig.Value;
             this.privatBankManager = new PrivatBankManager();
         }
 

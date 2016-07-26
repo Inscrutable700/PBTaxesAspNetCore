@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PBTaxesAspNetCore.Helpers;
+using PBTaxesAspNetCore.Models;
 
 namespace PBTaxesAspNetCore
 {
@@ -26,6 +27,7 @@ namespace PBTaxesAspNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.Configure<PrivatBankConfig>(Configuration.GetSection("PrivatBank"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc();
         }
