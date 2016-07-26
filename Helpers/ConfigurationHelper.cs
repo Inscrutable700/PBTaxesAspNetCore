@@ -12,7 +12,7 @@
         {
             get
             {
-                return null; //ConfigurationManager.AppSettings["PBClientID"];
+                return "0042819a-0e52-4b12-b616-972a9f8b8257"; //ConfigurationManager.AppSettings["PBClientID"];
             }
         }
 
@@ -23,7 +23,7 @@
         {
             get
             {
-                return null; //ConfigurationManager.AppSettings["PBClientSecret"];
+                return "6bba30e42b1d9a5032e3956b9ad41f65"; //ConfigurationManager.AppSettings["PBClientSecret"];
             }
         }
     }

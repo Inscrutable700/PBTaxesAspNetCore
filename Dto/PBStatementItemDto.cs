@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace PBTaxesAspNetCore.Dto
 {
@@ -11,7 +12,7 @@ namespace PBTaxesAspNetCore.Dto
         /// <summary>
         /// Gets or sets the number.
         /// </summary>
-        //[DeserializeAs(Name = "@n")]
+        [JsonProperty("@n")]
         public string N { get; set; }
 
         /// <summary>
@@ -68,12 +69,13 @@ namespace PBTaxesAspNetCore.Dto
             /// Gets or sets the short type.
             /// </summary>
             //[DeserializeAs(Name = "@shorttype")]
+            [JsonProperty("@shorttype")]
             public string ShortType { get; set; }
 
             /// <summary>
             /// Gets or sets the post date formatted.
             /// </summary>
-            //[DeserializeAs(Name = "@postdate")]
+            [JsonProperty("@postdate")]
             public string PostDateFormatted {
                 get
                 {
@@ -94,13 +96,13 @@ namespace PBTaxesAspNetCore.Dto
             /// <summary>
             /// Gets or sets the amount.
             /// </summary>
-            //[DeserializeAs(Name = "@amt")]
+            [JsonProperty("@amt")]
             public double Amount { get; set; }
 
             /// <summary>
             /// Gets or sets the CCY.
             /// </summary>
-            //[DeserializeAs(Name = "@ccy")]
+            [JsonProperty("@ccy")]
             public string CCY { get; set; }
         }
 
@@ -123,6 +125,7 @@ namespace PBTaxesAspNetCore.Dto
             /// <summary>
             /// Gets or sets the number.
             /// </summary>
+            [JsonProperty("@number")]
             public string Number { get; set; }
         }
     }

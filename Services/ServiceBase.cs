@@ -41,19 +41,6 @@ namespace TaxesPrivatBank.Business.Services
                 .PostJsonAsync(parameters).ReceiveJson<T>();
             response.Wait();
             return response.Result;
-            // RestClient client = new RestClient(new Uri(this.serviceUrl));
-            // RestRequest request = new RestRequest(apiEndpoint, Method.POST);
-            // request.RequestFormat = DataFormat.Json;
-            // request.AddHeader("Content-Type", "application/json");
-            // request.AddHeader("Accept", "application/json");
-
-            // request.AddBody(parameters);
-
-            // var response = client.Execute<T>(request);
-            // T responseData = response.Data;
-            // return responseData;
-
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -77,33 +64,10 @@ namespace TaxesPrivatBank.Business.Services
                 client.WithHeader("Authorization", authorizationHeader);
             }
 
-            var task = client.GetAsync().ReceiveJson<T>();
+            var task = client.GetAsync().ReceiveString();
             task.Wait();
-            return task.Result;
-
-            // RestClient client = new RestClient(new Uri(this.serviceUrl));
-            // RestRequest request = new RestRequest(apiEndpoint, Method.GET);
-            // request.RequestFormat = DataFormat.Json;
-            // request.AddHeader("Content-Type", "application/json");
-            // request.AddHeader("Accept", "application/json");
-
-            // // Add authorization header if it needed
-            // if (!string.IsNullOrEmpty(authorizationHeader))
-            // {
-            //     request.AddHeader("Authorization", authorizationHeader);
-            // }
-
-            // // Add query string parameters
-            // foreach(KeyValuePair<string, string> parameter in parameters)
-            // {
-            //     request.AddQueryParameter(parameter.Key, parameter.Value);
-            // }
-            
-            // var response = client.Execute<T>(request);
-            // T responseData = response.Data;
-            // return responseData;
-
-            throw new NotImplementedException();
+            T res = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(task.Result);
+            return res;
         }
     }
 }

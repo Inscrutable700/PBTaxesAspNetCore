@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PBTaxesAspNetCore.Dto
 {
@@ -10,7 +11,7 @@ namespace PBTaxesAspNetCore.Dto
         /// <summary>
         /// Gets or sets the exchange rates.
         /// </summary>
-        //[DeserializeAs(Name = "exchangeRate")]
+        [JsonProperty("exchangeRate")]
         public List<ExchangeRateDto> ExchangeRates { get; set; }
     }
 }

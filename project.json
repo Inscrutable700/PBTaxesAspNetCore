@@ -23,7 +23,9 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "System.Net.Http": "*",
     "Newtonsoft.Json": "*",
-    "Flurl.Http": "*"
+    "Flurl.Http": "*",
+    "bootstrap": "*",
+    "jQuery": "*"
   },
   "tools": {
     "BundlerMinifier.Core": "2.0.238",

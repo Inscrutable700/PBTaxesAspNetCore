@@ -36,7 +36,7 @@ namespace TaxesPrivatBank.Business.Services
             Dictionary<string, string> parameters = new Dictionary<string, string>
             {
                 { "date", date.ToString("dd.MM.yyyy") },
-                { "json", null }
+                { "json", string.Empty }
             };
 
             var exchangeRate = this.GetGETResponse<ExchangeRatesDto>(apiEndPoint, parameters);
