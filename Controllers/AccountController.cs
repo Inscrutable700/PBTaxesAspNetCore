@@ -34,12 +34,12 @@ namespace PBTaxesAspNetCore.Controllers
         }
 
         [HttpPost]
-        public ActionResult LoginToPB(string login, string password)
+        public async Task<ActionResult> LoginToPB(string login, string password)
         {
             ActionResult result = null;
-            PBSessionDto session = this.privatBankManager.GetSession();
-            PBPersonSessionDto personSession = this.privatBankManager
-                .GetPersonSession(session.ID, login, password);
+            PBSessionDto session = await this.privatBankManager.GetSessionAsync();
+            PBPersonSessionDto personSession = await this.privatBankManager
+                .GetPersonSessionAsync(session.ID, login, password);
             CookieHelper.PBSessionID = personSession.ID;
             if (personSession.Message.StartsWith("Authentication successful"))
             {
@@ -59,10 +59,10 @@ namespace PBTaxesAspNetCore.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConfirmCode(string code)
+        public async Task<ActionResult> ConfirmCode(string code)
         {
             string sessionID = CookieHelper.PBSessionID;
-            PBPersonSessionDto personSession = this.privatBankManager.ConfirmSmsCode(sessionID, code);
+            PBPersonSessionDto personSession = await this.privatBankManager.ConfirmSmsCodeAsync(sessionID, code);
             CookieHelper.PBSessionID = personSession.ID;
             return this.RedirectToAction("Index", "Home", null);
         }

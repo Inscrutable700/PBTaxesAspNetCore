@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PBTaxesAspNetCore.Dto;
@@ -38,9 +39,9 @@ namespace PBTaxesAspNetCore.Managers
         /// <returns>
         /// The session.
         /// </returns>
-        public PBSessionDto GetSession()
+        public Task<PBSessionDto> GetSessionAsync()
         {
-            return this.privat24BusinessService.GetSession();
+            return this.privat24BusinessService.GetSessionAsync();
         }
 
         /// <summary>
@@ -52,9 +53,9 @@ namespace PBTaxesAspNetCore.Managers
         /// <returns>
         /// The person session.
         /// </returns>
-        public PBPersonSessionDto GetPersonSession(string sessionID, string login, string password)
+        public Task<PBPersonSessionDto> GetPersonSessionAsync(string sessionID, string login, string password)
         {
-            return this.privat24BusinessService.GetPersonSession(sessionID, login, password);
+            return this.privat24BusinessService.GetPersonSessionAsync(sessionID, login, password);
         }
 
         /// <summary>
@@ -63,9 +64,9 @@ namespace PBTaxesAspNetCore.Managers
         /// <param name="sessionId">The session identifier.</param>
         /// <param name="code">The code.</param>
         /// <returns>The person session.</returns>
-        public PBPersonSessionDto ConfirmSmsCode(string sessionId, string code)
+        public Task<PBPersonSessionDto> ConfirmSmsCodeAsync(string sessionId, string code)
         {
-            return this.privat24BusinessService.ConfirmSmsCode(sessionId, code);
+            return this.privat24BusinessService.ConfirmSmsCodeAsync(sessionId, code);
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace PBTaxesAspNetCore.Managers
         /// <param name="endDate">The end date.</param>
         /// <param name="interestRate">The interest rate.</param>
         /// <returns></returns>
-        public TaxesDto GetTaxes(string sessionID, DateTime startDate, DateTime endDate, double interestRate)
+        public async Task<TaxesDto> GetTaxesAsync(string sessionID, DateTime startDate, DateTime endDate, double interestRate)
         {
             TaxesDto taxes = new TaxesDto()
             {
@@ -84,7 +85,7 @@ namespace PBTaxesAspNetCore.Managers
                 EndDate = endDate,
             };
 
-            var statements = this.privat24BusinessService.GetStatements(sessionID, startDate, endDate);
+            List<PBStatementItemDto> statements = await this.privat24BusinessService.GetStatementsAsync(sessionID, startDate, endDate);
 
             var inputStatements = statements
                 .Where(d => d.Info.ShortType == "C")
@@ -101,7 +102,7 @@ namespace PBTaxesAspNetCore.Managers
                 }
                 else
                 {
-                    ExchangeRateDto excangeRate = this.privat24Service
+                    ExchangeRateDto excangeRate = await this.privat24Service
                         .GetExchangeRate(inputStatement.Amount.CCY, inputStatement.Info.PostDate);
                     if (excangeRate != null)
                     {

@@ -6,9 +6,8 @@ using PBTaxesAspNetCore.Helpers;
 using PBTaxesAspNetCore.Interfaces;
 using PBTaxesAspNetCore.Managers;
 using PBTaxesAspNetCore.Models;
-using System.Threading.Tasks;
-using PBTaxesAspNetCore.Dto;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace PBTaxesAspNetCore.Controllers
 {
@@ -27,13 +26,13 @@ namespace PBTaxesAspNetCore.Controllers
         /// The generate taxes page.
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             TaxesViewModel model = new TaxesViewModel();
 
             string sessionID = CookieHelper.PBSessionID;
-            var taxes = this.privatBankManager
-                .GetTaxes(sessionID, DateTime.Parse("04.01.2016"), DateTime.Parse("06.30.2016"), 5);
+            var taxes = await this.privatBankManager
+                .GetTaxesAsync(sessionID, DateTime.Parse("04.01.2016"), DateTime.Parse("06.30.2016"), 5);
 
             model.FullAmount = taxes.FullAmount;
             model.StartDate = taxes.StartDate;

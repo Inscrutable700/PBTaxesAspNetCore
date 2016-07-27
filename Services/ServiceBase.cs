@@ -32,15 +32,12 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="apiEndpoint">The API endpoint.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        protected T GetPOSTResponse<T>(string apiEndpoint, Dictionary<string, string> parameters)
+        protected async Task<T> GetPOSTResponseAsync<T>(string apiEndpoint, Dictionary<string, string> parameters)
             where T : new()
         {
             var client = new FlurlClient($"{this.serviceUrl}{apiEndpoint}");
             client.WithHeader("Accept", "application/json");
-            var response = client
-                .PostJsonAsync(parameters).ReceiveJson<T>();
-            response.Wait();
-            return response.Result;
+            return await client.PostJsonAsync(parameters).ReceiveJson<T>();
         }
 
         /// <summary>
@@ -51,7 +48,7 @@ namespace TaxesPrivatBank.Business.Services
         /// <param name="parameters">The parameters.</param>
         /// <param name="authorizationHeader">The authorization header.</param>
         /// <returns></returns>
-        protected T GetGETResponse<T>(string apiEndpoint, Dictionary<string, string> parameters, string authorizationHeader = null)
+        protected async Task<T> GetGETResponseAsync<T>(string apiEndpoint, Dictionary<string, string> parameters, string authorizationHeader = null)
             where T : new()
         {
             var url = new Flurl.Url($"{this.serviceUrl}{apiEndpoint}").SetQueryParams(parameters);
@@ -64,10 +61,8 @@ namespace TaxesPrivatBank.Business.Services
                 client.WithHeader("Authorization", authorizationHeader);
             }
 
-            var task = client.GetAsync().ReceiveString();
-            task.Wait();
-            T res = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(task.Result);
-            return res;
+            string result = await client.GetAsync().ReceiveString();
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
         }
     }
 }

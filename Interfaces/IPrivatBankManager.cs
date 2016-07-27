@@ -15,7 +15,7 @@ namespace PBTaxesAspNetCore.Interfaces
         /// <returns>
         /// The session.
         /// </returns>
-        PBSessionDto GetSession();
+        Task<PBSessionDto> GetSessionAsync();
 
         /// <summary>
         /// Gets the person session.
@@ -26,7 +26,7 @@ namespace PBTaxesAspNetCore.Interfaces
         /// <returns>
         /// The person session.
         /// </returns>
-        PBPersonSessionDto GetPersonSession(string sessionID, string login, string password);
+        Task<PBPersonSessionDto> GetPersonSessionAsync(string sessionID, string login, string password);
 
         /// <summary>
         /// Confirms the SMS code.
@@ -34,7 +34,7 @@ namespace PBTaxesAspNetCore.Interfaces
         /// <param name="sessionId">The session identifier.</param>
         /// <param name="code">The code.</param>
         /// <returns>The person session.</returns>
-        PBPersonSessionDto ConfirmSmsCode(string sessionId, string code);
+        Task<PBPersonSessionDto> ConfirmSmsCodeAsync(string sessionId, string code);
 
         /// <summary>
         /// Gets the statements.
@@ -44,6 +44,6 @@ namespace PBTaxesAspNetCore.Interfaces
         /// <param name="endDate">The end date.</param>
         /// <param name="interestRate">The interest rate.</param>
         /// <returns></returns>
-        TaxesDto GetTaxes(string sessionID, DateTime startDate, DateTime endDate, double interestRate);
+        Task<TaxesDto> GetTaxesAsync(string sessionID, DateTime startDate, DateTime endDate, double interestRate);
     }
 }

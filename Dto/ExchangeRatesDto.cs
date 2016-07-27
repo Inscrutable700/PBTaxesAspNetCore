@@ -12,6 +12,6 @@ namespace PBTaxesAspNetCore.Dto
         /// Gets or sets the exchange rates.
         /// </summary>
         [JsonProperty("exchangeRate")]
-        public List<ExchangeRateDto> ExchangeRates { get; set; }
+        public ExchangeRateDto[] ExchangeRates { get; set; }
     }
 }
