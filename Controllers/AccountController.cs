@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PBTaxesAspNetCore.Dto;
 using PBTaxesAspNetCore.Helpers;
@@ -40,17 +43,26 @@ namespace PBTaxesAspNetCore.Controllers
             PBSessionDto session = await this.privatBankManager.GetSessionAsync();
             PBPersonSessionDto personSession = await this.privatBankManager
                 .GetPersonSessionAsync(session.ID, login, password);
-            CookieHelper.PBSessionID = personSession.ID;
             if (personSession.Message.StartsWith("Authentication successful"))
             {
+                this.Login(personSession.ID);
                 result = this.RedirectToAction("Index", "Home", null);
             }
             else
             {
+                CookieHelper.PBSessionID = personSession.ID;
                 result = this.RedirectToAction("ConfirmCode", "Account");
             }
 
             return result;
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> LogoutFromPB()
+        {
+            await this.HttpContext.Authentication.SignOutAsync("Cookies");
+            return this.RedirectToAction("Index", "Home");
         }
 
         public ActionResult ConfirmCode()
@@ -63,8 +75,25 @@ namespace PBTaxesAspNetCore.Controllers
         {
             string sessionID = CookieHelper.PBSessionID;
             PBPersonSessionDto personSession = await this.privatBankManager.ConfirmSmsCodeAsync(sessionID, code);
-            CookieHelper.PBSessionID = personSession.ID;
+            if (personSession != null)
+            {
+                this.Login(personSession.ID);
+            }
+
             return this.RedirectToAction("Index", "Home", null);
+        }
+
+        private async void Login(string pbTokenID)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, pbTokenID)
+            };
+            // создаем объект ClaimsIdentity
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, 
+                ClaimsIdentity.DefaultRoleClaimType);
+            // установка аутентификационных куки
+            await HttpContext.Authentication.SignInAsync("Cookies", new ClaimsPrincipal(id));
         }
     }
 }

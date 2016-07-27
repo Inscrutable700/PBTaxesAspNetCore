@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Newtonsoft.Json;
 
 namespace TaxesPrivatBank.Business.Services
 {
@@ -37,7 +38,8 @@ namespace TaxesPrivatBank.Business.Services
         {
             var client = new FlurlClient($"{this.serviceUrl}{apiEndpoint}");
             client.WithHeader("Accept", "application/json");
-            return await client.PostJsonAsync(parameters).ReceiveJson<T>();
+            string result = await client.PostJsonAsync(parameters).ReceiveString();
+            return JsonConvert.DeserializeObject<T>(result);
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace TaxesPrivatBank.Business.Services
             }
 
             string result = await client.GetAsync().ReceiveString();
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(result);
+            return JsonConvert.DeserializeObject<T>(result);
         }
     }
 }

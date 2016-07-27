@@ -25,7 +25,8 @@
     "Newtonsoft.Json": "*",
     "Flurl.Http": "*",
     "bootstrap": "*",
-    "jQuery": "*"
+    "jQuery": "*",
+    "Microsoft.AspNetCore.Authentication.Cookies": "*"
   },
   "tools": {
     "BundlerMinifier.Core": "2.0.238",
