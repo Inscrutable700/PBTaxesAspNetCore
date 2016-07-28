@@ -66,5 +66,20 @@ namespace TaxesPrivatBank.Business.Services
             string result = await client.GetAsync().ReceiveString();
             return JsonConvert.DeserializeObject<T>(result);
         }
+
+        protected Task<string> GetGETResponseStringAsync(string apiEndpoint, Dictionary<string, string> parameters, string authorizationHeader = null)
+        {
+            var url = new Flurl.Url($"{this.serviceUrl}{apiEndpoint}").SetQueryParams(parameters);
+            var client = new FlurlClient(url);
+            // client.WithHeader("Content-Type", "application/json");
+            client.WithHeader("Accept", "application/json");
+
+            if(!string.IsNullOrEmpty(authorizationHeader))
+            {
+                client.WithHeader("Authorization", authorizationHeader);
+            }
+
+            return client.GetAsync().ReceiveString();
+        }
     }
 }

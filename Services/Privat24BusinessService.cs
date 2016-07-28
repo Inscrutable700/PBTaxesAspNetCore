@@ -76,6 +76,19 @@ namespace TaxesPrivatBank.Business.Services
             return this.GetPOSTResponseAsync<PBPersonSessionDto>(apiEndpoint, parameters);
         }
 
+        public Task<PBPersonSessionDto> GetPersonSessionAsyncTest(string sessionId, string login, string password)
+        {
+            string apiEndpoint = "api/p24BusinessAuth/createSession";
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "sessionId", sessionId },
+                { "login", login},
+                { "password", password }
+            };
+
+            return this.GetPOSTResponseAsync<PBPersonSessionDto>(apiEndpoint, parameters);
+        }
+
         /// <summary>
         /// Confirms the SMS code.
         /// </summary>
