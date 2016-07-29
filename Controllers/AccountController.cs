@@ -10,6 +10,7 @@ using PBTaxesAspNetCore.Dto;
 using PBTaxesAspNetCore.Helpers;
 using PBTaxesAspNetCore.Interfaces;
 using PBTaxesAspNetCore.Managers;
+using PBTaxesAspNetCore.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,12 +44,43 @@ namespace PBTaxesAspNetCore.Controllers
             PBSessionDto session = await this.privatBankManager.GetSessionAsync();
             PBPersonSessionDto personSession = await this.privatBankManager
                 .GetPersonSessionAsync(session.ID, login, password);
-            if (personSession.Message.StartsWith("Authentication successful"))
+
+            if (string.IsNullOrEmpty(personSession.Message))
+            {
+                CookieHelper.PBSessionID = personSession.ID;
+                List<PhoneNumberViewModel> numbers = new List<PhoneNumberViewModel>();
+                foreach (var number in personSession.PhoneNumbers)
+                {
+                    numbers.Add(new PhoneNumberViewModel()
+                    {
+                        Id = number.Id,
+                        Number = number.Number,
+                    });
+                }
+
+                result = this.View("SelectNumber", numbers.ToArray());
+            }
+            else if (personSession.Message.StartsWith("Authentication successful"))
             {
                 this.Login(personSession.ID);
                 result = this.RedirectToAction("Index", "Home", null);
             }
             else
+            {
+                CookieHelper.PBSessionID = personSession.ID;
+                result = this.RedirectToAction("ConfirmCode", "Account");
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SelectNumber(string numberId)
+        {
+            ActionResult result = null;
+            string sessionID = CookieHelper.PBSessionID;
+            PBPersonSessionDto personSession = await this.privatBankManager.SelectNumber(sessionID, numberId);
+            if (personSession != null)
             {
                 CookieHelper.PBSessionID = personSession.ID;
                 result = this.RedirectToAction("ConfirmCode", "Account");

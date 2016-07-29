@@ -7,6 +7,10 @@ namespace PBTaxesAspNetCore.Dto
     /// </summary>
     public class PBPersonSessionDto
     {
+        public PBPersonSessionDto(){
+            this.PhoneNumbers = new List<PhoneNumber>();
+        }
+
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
@@ -31,5 +35,14 @@ namespace PBTaxesAspNetCore.Dto
         /// Gets or sets the roles.
         /// </summary>
         public List<string> Roles { get; set; }
+
+        public List<PhoneNumber> PhoneNumbers { get; set; }
+
+        public class PhoneNumber
+        {
+            public string Id { get; set; }
+
+            public string Number { get; set; }
+        }
     }
 }

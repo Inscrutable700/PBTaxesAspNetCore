@@ -22,9 +22,9 @@
             <th>
                 Курс
             </th>
-            <td>
+            <th>
                 Сума в гривнах
-            </td>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +35,11 @@
                     @statement.Date.ToString("dd.MM.yyyy")
                 </td>
                 <td>
-                    @statement.IsTaxed
+                    @if(statement.IsTaxed){
+                        <span class="glyphicon glyphicon-ok"></span>
+                    }else{
+                        <span class="glyphicon glyphicon-remove"></span>
+                    }
                 </td>
                 <td>
                     @statement.Description

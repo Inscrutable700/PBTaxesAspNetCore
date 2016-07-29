@@ -1,0 +1,15 @@
+@model PBTaxesAspNetCore.ViewModels.PhoneNumberViewModel[]
+
+<br />
+<form role="form" asp-action="SelectNumber" asp-controller="Account" method="POST">
+  <div class="form-group">
+    <label for="code">Номер телефона:</label>
+    <select name="numberId" class="form-control">
+      @foreach(var phoneNumber in Model)
+      {
+        <option value="@phoneNumber.Id">@phoneNumber.Number</option>
+      }
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success">Ввести</button>
+</form>

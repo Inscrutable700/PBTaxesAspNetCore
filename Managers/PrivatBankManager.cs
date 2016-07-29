@@ -55,7 +55,12 @@ namespace PBTaxesAspNetCore.Managers
         /// </returns>
         public Task<PBPersonSessionDto> GetPersonSessionAsync(string sessionID, string login, string password)
         {
-            return this.privat24BusinessService.GetPersonSessionAsync(sessionID, login, password);
+            return this.privat24BusinessService.GetPersonSessionAsyncTest(sessionID, login, password);
+        }
+
+        public Task<PBPersonSessionDto> SelectNumber(string sessionId, string numberId)
+        {
+            return this.privat24BusinessService.SelectNumber(sessionId, numberId);
         }
 
         /// <summary>

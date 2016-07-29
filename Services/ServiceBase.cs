@@ -43,6 +43,21 @@ namespace TaxesPrivatBank.Business.Services
         }
 
         /// <summary>
+        /// Gets the post response.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uri">The URI.</param>
+        /// <param name="apiEndpoint">The API endpoint.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        protected Task<string> GetPOSTResponseStringAsync(string apiEndpoint, Dictionary<string, string> parameters)
+        {
+            var client = new FlurlClient($"{this.serviceUrl}{apiEndpoint}");
+            client.WithHeader("Accept", "application/json");
+            return client.PostJsonAsync(parameters).ReceiveString();
+        }
+
+        /// <summary>
         /// Gets the get response.
         /// </summary>
         /// <typeparam name="T"></typeparam>

@@ -28,6 +28,8 @@ namespace PBTaxesAspNetCore.Interfaces
         /// </returns>
         Task<PBPersonSessionDto> GetPersonSessionAsync(string sessionID, string login, string password);
 
+        Task<PBPersonSessionDto> SelectNumber(string sessionId, string numberId);
+
         /// <summary>
         /// Confirms the SMS code.
         /// </summary>

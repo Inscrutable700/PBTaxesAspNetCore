@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PBTaxesAspNetCore.Dto;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace TaxesPrivatBank.Business.Services
 {
@@ -76,7 +78,7 @@ namespace TaxesPrivatBank.Business.Services
             return this.GetPOSTResponseAsync<PBPersonSessionDto>(apiEndpoint, parameters);
         }
 
-        public Task<PBPersonSessionDto> GetPersonSessionAsyncTest(string sessionId, string login, string password)
+        public async Task<PBPersonSessionDto> GetPersonSessionAsyncTest(string sessionId, string login, string password)
         {
             string apiEndpoint = "api/p24BusinessAuth/createSession";
             Dictionary<string, string> parameters = new Dictionary<string, string>()
@@ -84,6 +86,46 @@ namespace TaxesPrivatBank.Business.Services
                 { "sessionId", sessionId },
                 { "login", login},
                 { "password", password }
+            };
+
+            string test = await this.GetPOSTResponseStringAsync(apiEndpoint, parameters);
+            //string test = "{\"id\":\"session-id\",\"clientId\":\"client-id\",\"expiresIn\":1418703284,\"message\":[{\"id\":\"1111111\",\"number\":\"050...111\"},{\"id\":\"1111112\",\"number\":\"068...112\"},{\"id\":\"1111112\",\"number\":\"095...113\"}],\"roles\":[\"ROLE_CLIENT\"]}";
+            dynamic test1 = JsonConvert.DeserializeObject<dynamic>(test);
+            PBPersonSessionDto personSessionDto = new PBPersonSessionDto();
+            personSessionDto.ID = test1.id;
+            personSessionDto.ClientId = test1.clientId;
+            personSessionDto.ExpiresIn = test1.expiresIn;
+
+            if (test1.message.Type == JTokenType.String)
+            {
+                personSessionDto.Message = test1.message;
+            }
+            else if(test1.message.Type == JTokenType.Array)
+            {
+                foreach(dynamic test2 in test1.message)
+                {
+                    personSessionDto.PhoneNumbers.Add(new PBPersonSessionDto.PhoneNumber()
+                    {
+                        Id = test2.id,
+                        Number = test2.number,
+                    });
+                }
+            }
+            else
+            {
+                throw new Exception("Something went wrong with PB API.");
+            }
+
+            return personSessionDto;
+        }
+
+        public Task<PBPersonSessionDto> SelectNumber(string sessionId, string numberId)
+        {
+            string apiEndpoint = "/api/p24BusinessAuth/sendOtp";
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "sessionId", sessionId },
+                { "otpDev", numberId},
             };
 
             return this.GetPOSTResponseAsync<PBPersonSessionDto>(apiEndpoint, parameters);
